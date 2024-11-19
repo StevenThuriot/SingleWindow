@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <title>Single Window</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <p>
+        Here is a page with my application on it 👺
+    </p>
+
+    <script src="singlewindow.js"></script>
+    <script>
+        //singleWindowApp('testApp', 'https://my.sdworx.com');
+        //singleWindowApp('testApp', true);
+        //singleWindowApp('testApp', function() { alert('switched callback!'); });
+        singleWindowApp('testApp', {
+            homepage: 'https://my.sdworx.com',
+            allowSwitching: true,
+            onSwitch: function (id) { alert(`switched callback to window id ${id} !`); }
+        });
+    </script>
+</body>
+
+</html>
