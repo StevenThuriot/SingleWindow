@@ -1,10 +1,5 @@
 const singleWindowApp = (function () {
-    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-
-    return function(application, settings) {
+    return function (application, settings) {
         if (!application) {
             throw new Error('Application name is required');
         }
@@ -18,12 +13,6 @@ const singleWindowApp = (function () {
         }
 
         application = 'single-window-' + application;
-
-        if (window.localStorage.getItem(application) === uuid) {
-            throw new Error('singleWindow should only be initialized once');
-        }
-
-        window.localStorage.setItem(application, uuid);
 
         if (!settings) {
             settings = {};
@@ -61,9 +50,20 @@ const singleWindowApp = (function () {
             throw new Error('Unsupported homepage type');
         }
 
+        if (!settings.id) {
+            settings.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        } else if (typeof settings.id !== 'string') {
+            settings.id = '' + settings.id;
+        }
+
+        window.localStorage.setItem(application, settings.id);
+
         let windowTitle = document.title;
         window.addEventListener('storage', function (event) {
-            if (event.key === application && event.newValue !== uuid) {
+            if (event.key === application && event.newValue !== settings.id) {
                 if (document.getElementById('single-window-overlay')) {
                     return;
                 }
@@ -151,11 +151,11 @@ const singleWindowApp = (function () {
 
                     useHereButton.addEventListener('click', function () {
                         document.body.removeChild(overlay);
-                        window.localStorage.setItem(application, uuid);
+                        window.localStorage.setItem(application, settings.id);
                         document.title = windowTitle;
 
                         setTimeout(function () {
-                            settings.onSwitch(uuid);
+                            settings.onSwitch(settings.id);
                         }, 0);
                     });
 

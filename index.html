@@ -17,8 +17,8 @@
         //singleWindowApp('testApp', function() { alert('switched callback!'); });
         singleWindowApp('testApp', {
             homepage: 'https://my.sdworx.com',
-            allowSwitching: true,
-            onSwitch: function (id) { alert(`switched callback to window id ${id} !`); }
+            allowSwitching: false,
+            id: new URLSearchParams(window.location.search).get('accessRightId')
         });
     </script>
 </body>
